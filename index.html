@@ -1,0 +1,78 @@
+ript>
+  function copyContract() {
+    const addr = '0xBULL...TRUMP';
+    navigator.clipboard.writeText(addr).then(function() {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  
+  function animateValue(id, start, end, duration, prefix, suffix) {
+    const obj = document.getElementById(id);
+    const range = end - start;
+    const minTimer = 50;
+    let stepTime = Math.abs(Math.floor(duration / range));
+    stepTime = Math.max(stepTime, minTimer);
+    let startTime = new Date().getTime();
+    let endTime = startTime + duration;
+    let timer;
+    
+    function run() {
+      let now = new Date().getTime();
+      let remaining = Math.max((endTime - now) / duration, 0);
+      let value = Math.round(end - (remaining * range));
+      obj.innerHTML = (prefix || '') + value.toLocaleString() + (suffix || '');
+      if (value == end) clearInterval(timer);
+    }
+    
+    timer = setInterval(run, stepTime);
+    run();
+  }
+  
+  let countersTriggered = false;
+  function triggerCounters() {
+    if (countersTriggered) return;
+    const statsBar = document.querySelector('.stats-bar');
+    const rect = statsBar.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      countersTriggered = true;
+      animateValue('holders', 0, 2847, 2000, '', '');
+      animateValue('mcap', 0, 4200000, 2500, '$', '');
+      animateValue('liquidity', 0, 850000, 2000, '$', '');
+      animateValue('burned', 0, 42, 1500, '', '%');
+    }
+  }
+  
+  function handleScroll() {
+    triggerCounters();
+    document.querySelectorAll('.fade-in').forEach(function(el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.85) {
+        el.classList.add('visible');
+      }
+    });
+  }
+  
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('load', handleScroll);
+  
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (10 + Math.random() * 20) + 's';
+    p.style.animationDelay = Math.random() * 15 + 's';
+    p.style.width = (2 + Math.random() * 4) + 'px';
+    p.style.height = p.style.width;
+    particlesContainer.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
